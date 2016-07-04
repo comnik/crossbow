@@ -20,6 +20,7 @@
  *     Kevin Bocksrocker <kevin.bocksrocker@gmail.com>
  *     Lucas Braun <braunl@inf.ethz.ch>
  */
+#include <crossbow/string.hpp>
 #include <crossbow/infinio/Endpoint.hpp>
 
 #include "AddressHelper.hpp"
@@ -96,6 +97,10 @@ void Endpoint::setAddress(int family, const string& host, uint16_t port) {
     default:
         break;
     }
+}
+
+crossbow::string Endpoint::getToken() const {
+    return crossbow::string(formatAddress(reinterpret_cast<const struct sockaddr*>(&mAddress)));
 }
 
 std::ostream& operator<<(std::ostream& out, const Endpoint& rhs) {
