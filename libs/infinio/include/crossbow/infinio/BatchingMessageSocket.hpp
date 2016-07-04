@@ -226,14 +226,15 @@ void BatchingMessageSocket<Handler>::accept(const crossbow::string& data, Infini
 template <typename Handler>
 void BatchingMessageSocket<Handler>::shutdown() {
     if (mState != ConnectionState::CONNECTED) {
-        throw std::system_error(std::make_error_code(std::errc::not_connected));
-    }
-
-    mState = ConnectionState::SHUTDOWN;
-    try {
-        mSocket->disconnect();
-    } catch (std::system_error& e) {
-        LOG_ERROR("Error disconnecting socket [error = %1% %2%]", e.code(), e.what());
+      std::system_error e = std::system_error(std::make_error_code(std::errc::not_connected));
+      LOG_ERROR("Error shutting down socket [error = %1% %2%]", e.code(), e.what());
+    } else {
+      mState = ConnectionState::SHUTDOWN;
+      try {
+          mSocket->disconnect();
+      } catch (std::system_error& e) {
+          LOG_ERROR("Error disconnecting socket [error = %1% %2%]", e.code(), e.what());
+      }
     }
 }
 

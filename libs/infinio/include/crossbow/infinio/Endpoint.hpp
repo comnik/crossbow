@@ -90,6 +90,8 @@ public:
         return reinterpret_cast<struct sockaddr*>(&mAddress);
     }
 
+    crossbow::string getToken() const;
+
 private:
     friend std::ostream& operator<<(std::ostream&, const Endpoint&);
 
