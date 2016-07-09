@@ -391,6 +391,8 @@ public:
     RpcClientSocket(InfinibandSocket socket, size_t maxPendingResponses = std::numeric_limits<size_t>::max(),
         size_t maxBatchSize = std::numeric_limits<size_t>::max());
 
+    using Base::isConnected;
+
 protected:
     /**
      * @brief Send the synchronous request to the remote host
