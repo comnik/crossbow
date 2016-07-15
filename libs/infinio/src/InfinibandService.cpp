@@ -165,9 +165,25 @@ void InfinibandService::run() {
     LOG_TRACE("Start RDMA CM event polling");
     struct rdma_cm_event* event = nullptr;
     errno = 0;
-    while (rdma_get_cm_event(mChannel, &event) == 0) {
-        processEvent(event);
-        rdma_ack_cm_event(event);
+    while (true) {
+        auto err = rdma_get_cm_event(mChannel, &event);
+        if (err == -1) {
+            if (errno == 4) {
+                // Interrupted system call
+
+                // Check if the system is shutting down
+                if (mShutdown.load()) {
+                    break;
+                } else {
+                    continue;
+                }
+            } else {
+                break;
+            }
+        } else {
+            processEvent(event);
+            rdma_ack_cm_event(event);
+        }
     }
 
     // Check if the system is shutting down
