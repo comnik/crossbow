@@ -64,6 +64,7 @@ private:
 
     InfinibandAcceptor mAcceptor;
 
+protected:
     tbb::spin_rw_mutex mSocketsMutex;
     tbb::concurrent_unordered_set<Socket*> mSockets;
 };
